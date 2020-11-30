@@ -24,12 +24,26 @@ def save_image(image_link, save_dir):
         shutil.copyfileobj(image_raw.raw, out_file)
 
 
-def get_product_data(product, raw_data_file):
+def get_product_data(product, raw_data_file, url):
     img = product.find("img")['src']
+    # print("product is ")
+    # print(product)
+    # print("img is ")
+    # print(img)
+
+    # print("url is ")
+    # print(url)
+
     image_small = img.replace('/media/uploads/p/mm/', '/media/uploads/p/s/')
     image_large = img.replace('/media/uploads/p/s/', '/media/uploads/p/l/'). \
         replace('/media/uploads/p/mm/', '/media/uploads/p/l/')
 
+    # print("image_large is ")
+    # print(image_large)
+    # print("image_small is ")
+    # print(image_small)
+    # print("1 done")
+    CategoryURL = url
     Brand = product.find("div", {"qa": "product_name"}).find("h6").text
     Product = product.find("div", {"qa": "product_name"}).find("a").text
     Quantity = product.find("span", {"data-bind": "label"}).text
@@ -37,6 +51,7 @@ def get_product_data(product, raw_data_file):
 
     with open(raw_data_file, "a") as f:
         data = json.dumps({
+            'CategoryURL': CategoryURL,
             'Brand': Brand,
             'Product': Product,
             'Quantity': Quantity,
@@ -110,7 +125,7 @@ if __name__ == "__main__":
             os.makedirs(dl_img)
 
         for product in products:
-            get_product_data(product, raw_data_file)
+            get_product_data(product, raw_data_file, url)
 
         print("Downloaded all data from: ".format(url))
 
